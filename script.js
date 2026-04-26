@@ -11,6 +11,7 @@ if (yearSlot) {
   yearSlot.textContent = new Date().getFullYear();
 }
 
+// Navbar toggle
 if (navToggle && header) {
   navToggle.addEventListener("click", () => {
     const isOpen = header.classList.toggle("is-open");
@@ -25,6 +26,7 @@ if (navToggle && header) {
   });
 }
 
+// Filter bikes
 filterChips.forEach((chip) => {
   chip.addEventListener("click", () => {
     const selected = chip.dataset.filter;
@@ -36,25 +38,39 @@ filterChips.forEach((chip) => {
     });
 
     bikeCards.forEach((card) => {
-      const shouldShow = selected === "all" || card.dataset.category === selected;
+      const shouldShow =
+        selected === "all" || card.dataset.category === selected;
       card.classList.toggle("is-hidden", !shouldShow);
     });
   });
 });
 
+// ✅ FORM → WHATSAPP INTEGRATION
 if (leadForm && formStatus) {
   leadForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const formData = new FormData(leadForm);
-    const name = String(formData.get("name") || "Thanks");
-    const bikeType = String(formData.get("type") || "your selected");
+    const name = String(formData.get("name") || "User");
+    const bikeType = String(formData.get("type") || "Bike");
+    const message = String(formData.get("message") || "No message");
 
-    formStatus.textContent = `${name}, thanks. Our team will contact you shortly with ${bikeType.toString().toLowerCase()} bike options.`;
+    // WhatsApp formatted message
+    const text = `Name: ${name}%0ABike: ${bikeType}%0AMessage: ${message}`;
+
+    const whatsappURL = `https://api.whatsapp.com/send?phone=919322143610&text=${text}`;
+
+    // Open WhatsApp
+    window.open(whatsappURL, "_blank");
+
+    // UI feedback
+    formStatus.textContent = `${name}, redirecting you to WhatsApp...`;
+
     leadForm.reset();
   });
 }
 
+// Scroll reveal animation
 if ("IntersectionObserver" in window) {
   const observer = new IntersectionObserver(
     (entries) => {
@@ -72,5 +88,7 @@ if ("IntersectionObserver" in window) {
 
   revealTargets.forEach((element) => observer.observe(element));
 } else {
-  revealTargets.forEach((element) => element.classList.add("is-visible"));
+  revealTargets.forEach((element) =>
+    element.classList.add("is-visible")
+  );
 }
